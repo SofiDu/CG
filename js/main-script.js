@@ -7,7 +7,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 //////////////////////
 /* GLOBAL VARIABLES */
 //////////////////////
-var camera, scene, renderer;
+var camera, frontalCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, movablePerspectiveCamera, scene, renderer;
 
 var geometry, material, mesh;
 
@@ -230,7 +230,7 @@ function createScene(){
 //////////////////////
 /* CREATE CAMERA(S) */
 //////////////////////
-function createCameraPerspective() {
+function createCamera() {
     'use strict';
     camera = new THREE.PerspectiveCamera(70,
                                          window.innerWidth / window.innerHeight,
@@ -240,6 +240,87 @@ function createCameraPerspective() {
     camera.position.y = 50;
     camera.position.z = 50;
     camera.lookAt(scene.position);
+}
+
+function createFrontalCamera() {
+    'use strict';
+    frontalCamera = new THREE.OrthographicCamera(window.innerWidth / - 2,
+                                        window.innerWidth / 2,
+                                        window.innerHeight / 2,
+                                        window.innerHeight / - 2,
+                                        1,
+                                        1000);
+    frontalCamera.position.x = 50;
+    frontalCamera.position.y = 50;
+    frontalCamera.position.z = 50;
+    frontalCamera.lookAt(scene.position);
+}
+
+function createSideCamera() {
+    'use strict';
+    sideCamera = new THREE.OrthographicCamera(window.innerWidth / - 2,
+                                        window.innerWidth / 2,
+                                        window.innerHeight / 2,
+                                        window.innerHeight / - 2,
+                                        1,
+                                        1000);
+    sideCamera.position.x = 50;
+    sideCamera.position.y = 50;
+    sideCamera.position.z = 50;
+    sideCamera.lookAt(scene.position);
+}
+
+function createTopCamera() {
+    'use strict';
+    topCamera = new THREE.OrthographicCamera(window.innerWidth / - 2,
+                                        window.innerWidth / 2,
+                                        window.innerHeight / 2,
+                                        window.innerHeight / - 2,
+                                        1,
+                                        1000);
+    topCamera.position.x = 50;
+    topCamera.position.y = 50;
+    topCamera.position.z = 50;
+    topCamera.lookAt(scene.position);
+}
+
+function createOrthographicCamera() {
+    'use strict';
+    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / - 2,
+                                        window.innerWidth / 2,
+                                        window.innerHeight / 2,
+                                        window.innerHeight / - 2,
+                                        1,
+                                        1000);
+                                         
+    orthographicCamera.position.x = 50;
+    orthographicCamera.position.y = 50;
+    orthographicCamera.position.z = 50;
+    orthographicCamera.lookAt(scene.position);
+}
+
+function createPerspectiveCamera() {
+    'use strict';
+    perspectiveCamera = new THREE.PerspectiveCamera(70,
+                                         window.innerWidth / window.innerHeight,
+                                         1,
+                                         1000);
+    perspectiveCamera.position.x = 50;
+    perspectiveCamera.position.y = 50;
+    perspectiveCamera.position.z = 50;
+    perspectiveCamera.lookAt(scene.position);
+}
+
+function createMovablePerspectiveCamera() { // ????????
+    'use strict';
+    movablePerspectiveCamera = new THREE.PerspectiveCamera(70,
+                                         window.innerWidth / window.innerHeight,
+                                         1,
+                                         1000);
+    movablePerspectiveCamera.position.x = 50;
+    movablePerspectiveCamera.position.y = 50;
+    movablePerspectiveCamera.position.z = 50;
+    movablePerspectiveCamera.lookAt(scene.position);
 }
 
 /////////////////////
@@ -295,7 +376,14 @@ function init() {
     document.body.appendChild(renderer.domElement);
 
     createScene();
-    createCameraPerspective();
+    createCamera();
+
+    createFrontalCamera();
+    createSideCamera();
+    createTopCamera();
+    createOrthographicCamera();
+    createPerspectiveCamera();
+    createMovablePerspectiveCamera();
 
     render();
 
@@ -328,29 +416,22 @@ function onKeyDown(e) {
 
     switch (e.keyCode) {
         case 1: //frontal
+            camera = frontalCamera;
         case 2: //lateral
-            scene.traverse(function (node) {
-                if (node instanceof THREE.Mesh) {
-                    node.material.wireframe = !node.material.wireframe;
-                }
-            });
-            break;
+            camera = sideCamera;
         case 3:  //topo
+            camera = topCamera;
         case 4: //fixa projecao ortogonal
-            ball.userData.jumping = !ball.userData.jumping;
-            break;
+            camera = orthographicCamera;
         case 5:  //fixa projecao prespetiva
+            camera = perspectiveCamera;
         case 6: //movel prespetiva
-            scene.traverse(function (node) {
-                if (node instanceof THREE.AxesHelper) {
-                    node.visible = !node.visible;
-                }
-            });
-            break;
+            camera = movablePerspectiveCamera;
+
+
         case 81: //Q
 
         case 113: //q
-        
 
         case 65: //A
 
