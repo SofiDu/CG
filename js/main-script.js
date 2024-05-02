@@ -127,7 +127,7 @@ function addSteelCable(obj, x, y, z) {
 function createObject1(x,y,z){
     'use strict';
 
-    object = new THREE.Object3D();
+    var object = new THREE.Object3D();
 
     material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
     geometry = new THREE.BoxGeometry(1, 1, 1); 
@@ -142,11 +142,11 @@ function createObject1(x,y,z){
 function createObject2(x,y,z){
     'use strict';
 
-    object = new THREE.Object3D();
+    var object = new THREE.Object3D();
 
-    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-    geometry = new THREE.BoxGeometry(2, 1, 1); 
-    mesh = new THREE.Mesh(geometry, material);
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var geometry = new THREE.BoxGeometry(2, 1, 1); 
+    var mesh = new THREE.Mesh(geometry, material);
 
     object.add(mesh);
     object.position.set(x, y, z);
@@ -158,11 +158,11 @@ function createObject2(x,y,z){
 function createBin(x, y, z) {
     'use strict';
 
-    bin = new THREE.Object3D();
+    var bin = new THREE.Object3D();
 
-    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-    geometry = new THREE.BoxGeometry(15, 20, 10); 
-    mesh = new THREE.Mesh(geometry, material);
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var geometry = new THREE.BoxGeometry(15, 20, 10); 
+    var mesh = new THREE.Mesh(geometry, material);
 
     bin.add(mesh);
     bin.position.set(x, y, z);
@@ -279,6 +279,7 @@ function update(){
 /////////////
 function render() {
     'use strict';
+    renderer.render(scene, camera);
 
 }
 
@@ -294,7 +295,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
 
     createScene();
-    createCamera();
+    createCameraPerspective();
 
     render();
 
@@ -306,8 +307,9 @@ function init() {
 /* ANIMATION CYCLE */
 /////////////////////
 function animate() {
+    render();
+    requestAnimationFrame(animate);
     'use strict';
-
 }
 
 ////////////////////////////
@@ -345,7 +347,6 @@ function onKeyDown(e) {
                 }
             });
             break;
-        }
         case 81: //Q
 
         case 113: //q
@@ -378,6 +379,7 @@ function onKeyDown(e) {
         case 70: //F
 
         case 102: //f
+    }
 }
 
 ///////////////////////
