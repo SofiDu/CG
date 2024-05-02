@@ -56,7 +56,7 @@ function addCounterJib(obj, x, y, z) {
 
 function addJibHolder(obj, x, y, z) {
     'use strict';
-    geometry = new THREE.TeGeometry(2, 6, 2); 
+    geometry = new THREE.TetrahedronGeometry(2); 
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
@@ -70,9 +70,9 @@ function addJibTle(obj, x, y, z) {
     obj.add(mesh);
 }
 
-function addCounterbalance(obj, x, y, z) {
+function addCounterBalance(obj, x, y, z) {
     'use strict';
-    geometry = new THREE.BoxGeometry(2, 6, 2); 
+    geometry = new THREE.BoxGeometry(5, 2.5, 2.5); 
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
@@ -80,7 +80,7 @@ function addCounterbalance(obj, x, y, z) {
 
 function addCab(obj, x, y, z) {
     'use strict';
-    geometry = new THREE.BoxGeometry(2, 6, 2); 
+    geometry = new THREE.BoxGeometry(7.5, 5, 7.5); 
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
@@ -88,7 +88,7 @@ function addCab(obj, x, y, z) {
 
 function addTrolley(obj, x, y, z) {
     'use strict';
-    geometry = new THREE.BoxGeometry(2, 6, 2); 
+    geometry = new THREE.BoxGeometry(5, 2.5, 2.5); 
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
@@ -96,15 +96,15 @@ function addTrolley(obj, x, y, z) {
 
 function addBlock(obj, x, y, z) {
     'use strict';
-    geometry = new THREE.BoxGeometry(2, 6, 2); 
+    geometry = new THREE.BoxGeometry(2, 2, 2); 
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
 
-function addHook(obj, x, y, z) {
+function addClaw(obj, x, y, z) {
     'use strict';
-    geometry = new THREE.BoxGeometry(2, 6, 2); 
+    geometry = new THREE.BoxGeometry(0.5, 2, 0.5); 
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
@@ -112,15 +112,104 @@ function addHook(obj, x, y, z) {
 
 function addSteelCable(obj, x, y, z) {
     'use strict';
-    geometry = new THREE.BoxGeometry(2, 6, 2); 
+    geometry = new THREE.BoxGeometry(0.5, 25, 0.5); 
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
 
+//new group para juntar
+//rotation 
+//position
+
+
 //objects
+function createObject1(x,y,z){
+    'use strict';
+
+    object = new THREE.Object3D();
+
+    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    geometry = new THREE.BoxGeometry(1, 1, 1); 
+    mesh = new THREE.Mesh(geometry, material);
+
+    object.add(mesh);
+    object.position.set(x, y, z);
+
+    scene.add(object);
+}
+
+function createObject2(x,y,z){
+    'use strict';
+
+    object = new THREE.Object3D();
+
+    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    geometry = new THREE.BoxGeometry(2, 1, 1); 
+    mesh = new THREE.Mesh(geometry, material);
+
+    object.add(mesh);
+    object.position.set(x, y, z);
+
+    scene.add(object);
+}
 
 //bin
+function createBin(x, y, z) {
+    'use strict';
+
+    bin = new THREE.Object3D();
+
+    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    geometry = new THREE.BoxGeometry(15, 20, 10); 
+    mesh = new THREE.Mesh(geometry, material);
+
+    bin.add(mesh);
+    bin.position.set(x, y, z);
+
+    scene.add(bin);
+}
+
+
+function createCrane(x, y, z) {
+    'use strict';
+    var crane = new THREE.Object3D();
+    var topSection = new THREE.Object3D();
+    var claw = new THREE.Object3D();
+    var clawSection = new THREE.Object3D();
+
+    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+
+    //claw
+    addClaw(claw , 68,22.75,-10)
+    addClaw(claw , 70,22.75,-12)
+    addClaw(claw , 70,22.75,-8)
+    addClaw(claw , 72,22.75,-10)
+
+    //claw section
+    clawSection.add(claw);
+    addBlock(clawSection,70,22.75,-10);
+    addSteelCable(clawSection,70,36.25,-10);
+    addTrolley(clawSection,70,48.75,-10);
+
+    //top section
+    topSection.add(clawSection)
+    addCab(topSection, 20, 47.5, -10);
+    addCounterJib(topSection, 10, 52.5, -10);
+    addCounterBalance(topSection, 8, 50 , -1);
+    addJibHolder(topSection, 20, 58.5, -10);
+    addJib(topSection, 45, 52.5, -10);
+
+    crane.add(topSection);
+    addBase(crane, 20,2.5,-10);
+    addTower(crane,20,25,-10);
+    crane.add(topSection);
+    
+    crane.position.x = x;
+    crane.position.y = y;
+    crane.position.z = z;
+}
+
 
 /////////////////////
 /* CREATE SCENE(S) */
@@ -128,21 +217,30 @@ function addSteelCable(obj, x, y, z) {
 function createScene(){
     'use strict';
     scene = new THREE.Scene();
-
+    scene.background = new THREE.Color( 0xb8c7e0 )
 
     scene.add(new THREE.AxesHelper(10));
 
-    //createCrane
-    //createObjects
-    //createBin
-    createTable(0, 8, 0);
-    createBall(0, 0, 15);
+    createCrane(0,0,0); //mudar se necessario
+    createObject1(35, 0, 1);
+    createObject2(40,0,0);
+    createBin(60,0,0);  
 }
 
 //////////////////////
 /* CREATE CAMERA(S) */
 //////////////////////
-
+function createCameraPerspective() {
+    'use strict';
+    camera = new THREE.PerspectiveCamera(70,
+                                         window.innerWidth / window.innerHeight,
+                                         1,
+                                         1000);
+    camera.position.x = 50;
+    camera.position.y = 50;
+    camera.position.z = 50;
+    camera.lookAt(scene.position);
+}
 
 /////////////////////
 /* CREATE LIGHT(S) */
@@ -189,7 +287,19 @@ function render() {
 ////////////////////////////////
 function init() {
     'use strict';
+    renderer = new THREE.WebGLRenderer({
+        antialias: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
+    createScene();
+    createCamera();
+
+    render();
+
+    window.addEventListener("keydown", onKeyDown);
+    //window.addEventListener("resize", onResize);
 }
 
 /////////////////////
