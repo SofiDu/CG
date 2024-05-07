@@ -9,7 +9,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 //////////////////////
 var camera, frontalCamera, sideCamera, topCamera, orthographicCamera, perspectiveCamera, movablePerspectiveCamera, scene, renderer;
 
-var geometry, material, mesh;
+var geometry, material, mesh,material2;
+
+var crane,topSection,claw,clawSection;
+
+var object1,object2,bin;
 
 
 /*
@@ -25,7 +29,7 @@ a lança, (vi) cabine, (vii) carrinho de translação, (viii) cabo de aço conec
 function addBase(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(10, 5, 7.5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
     obj.add(mesh);
 }
@@ -33,7 +37,7 @@ function addBase(obj, x, y, z) {
 function addTower(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(5, 40, 5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -41,7 +45,7 @@ function addTower(obj, x, y, z) {
 function addJib(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(55, 5, 5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -49,7 +53,7 @@ function addJib(obj, x, y, z) {
 function addCounterJib(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(15, 2.5, 2.5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -57,7 +61,7 @@ function addCounterJib(obj, x, y, z) {
 function addJibHolder(obj, x, y, z) {
     'use strict';
     geometry = new THREE.TetrahedronGeometry(2); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -65,7 +69,7 @@ function addJibHolder(obj, x, y, z) {
 function addJibTle(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(2, 6, 2); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -73,7 +77,7 @@ function addJibTle(obj, x, y, z) {
 function addCounterBalance(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(5, 2.5, 2.5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -81,7 +85,7 @@ function addCounterBalance(obj, x, y, z) {
 function addCab(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(7.5, 5, 7.5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -89,7 +93,7 @@ function addCab(obj, x, y, z) {
 function addTrolley(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(5, 2.5, 2.5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -97,7 +101,7 @@ function addTrolley(obj, x, y, z) {
 function addBlock(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(2, 2, 2); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -105,7 +109,7 @@ function addBlock(obj, x, y, z) {
 function addClaw(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(0.5, 2, 0.5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -113,52 +117,49 @@ function addClaw(obj, x, y, z) {
 function addSteelCable(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(0.5, 25, 0.5); 
-    mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
 
-//new group para juntar
-//rotation 
-//position
 
 
 //objects
 function createObject1(x,y,z){
     'use strict';
 
-    var object = new THREE.Object3D();
+    object1 = new THREE.Object3D();
 
-    material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-    geometry = new THREE.BoxGeometry(1, 1, 1); 
-    mesh = new THREE.Mesh(geometry, material);
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var geometry = new THREE.BoxGeometry(1, 1, 1); 
+    var mesh = new THREE.Mesh(geometry, material);
 
-    object.add(mesh);
-    object.position.set(x, y, z);
+    object1.add(mesh);
+    object1.position.set(x, y, z);
 
-    scene.add(object);
+    scene.add(object1);
 }
 
 function createObject2(x,y,z){
     'use strict';
 
-    var object = new THREE.Object3D();
+    object2 = new THREE.Object3D();
 
     var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
     var geometry = new THREE.BoxGeometry(2, 1, 1); 
     var mesh = new THREE.Mesh(geometry, material);
 
-    object.add(mesh);
-    object.position.set(x, y, z);
+    object2.add(mesh);
+    object2.position.set(x, y, z);
 
-    scene.add(object);
+    scene.add(object2);
 }
 
 //bin
 function createBin(x, y, z) {
     'use strict';
 
-    var bin = new THREE.Object3D();
+    bin = new THREE.Object3D();
 
     var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
     var geometry = new THREE.BoxGeometry(15, 20, 10); 
@@ -173,10 +174,10 @@ function createBin(x, y, z) {
 
 function createCrane(x, y, z) {
     'use strict';
-    var crane = new THREE.Object3D();
-    var topSection = new THREE.Object3D();
-    var claw = new THREE.Object3D();
-    var clawSection = new THREE.Object3D();
+    crane = new THREE.Object3D();
+    topSection = new THREE.Object3D();
+    claw = new THREE.Object3D();
+    clawSection = new THREE.Object3D();
 
     material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
 
@@ -205,9 +206,12 @@ function createCrane(x, y, z) {
     addTower(crane,20,25,-10);
     crane.add(topSection);
     
+    
     crane.position.x = x;
     crane.position.y = y;
     crane.position.z = z;
+
+    scene.add(crane);
 }
 
 
@@ -221,11 +225,14 @@ function createScene(){
 
     scene.add(new THREE.AxesHelper(10));
 
-    createCrane(0,0,0); //mudar se necessario
+    createCrane(0,0,0);
     createObject1(35, 0, 1);
     createObject2(40,0,0);
     createBin(60,0,0);  
 }
+
+
+
 
 //////////////////////
 /* CREATE CAMERA(S) */
@@ -244,52 +251,51 @@ function createCamera() {
 
 function createFrontalCamera() {
     'use strict';
-    frontalCamera = new THREE.OrthographicCamera(window.innerWidth / - 2,
-                                        window.innerWidth / 2,
-                                        window.innerHeight / 2,
-                                        window.innerHeight / - 2,
+    frontalCamera = new THREE.OrthographicCamera(window.innerWidth / - 12,
+                                        window.innerWidth / 12,
+                                        window.innerHeight / 12,
+                                        window.innerHeight / - 12,
                                         1,
                                         1000);
-    frontalCamera.position.x = 50;
+    frontalCamera.position.x = 100;
     frontalCamera.position.y = 50;
-    frontalCamera.position.z = 50;
+    frontalCamera.position.z = 0;
     frontalCamera.lookAt(scene.position);
 }
 
 function createSideCamera() {
     'use strict';
-    sideCamera = new THREE.OrthographicCamera(window.innerWidth / - 2,
-                                        window.innerWidth / 2,
-                                        window.innerHeight / 2,
-                                        window.innerHeight / - 2,
+    sideCamera = new THREE.OrthographicCamera(window.innerWidth / - 10,
+                                        window.innerWidth / 10,
+                                        window.innerHeight / 10,
+                                        window.innerHeight / - 10,
                                         1,
                                         1000);
-    sideCamera.position.x = 50;
-    sideCamera.position.y = 50;
+    sideCamera.position.x = 0;
+    sideCamera.position.y = 30;
     sideCamera.position.z = 50;
     sideCamera.lookAt(scene.position);
 }
-
 function createTopCamera() {
     'use strict';
-    topCamera = new THREE.OrthographicCamera(window.innerWidth / - 2,
-                                        window.innerWidth / 2,
-                                        window.innerHeight / 2,
-                                        window.innerHeight / - 2,
+    topCamera = new THREE.OrthographicCamera(window.innerWidth / - 12,
+                                        window.innerWidth / 12,
+                                        window.innerHeight / 12,
+                                        window.innerHeight / - 12,
                                         1,
                                         1000);
-    topCamera.position.x = 50;
-    topCamera.position.y = 50;
-    topCamera.position.z = 50;
+    topCamera.position.x = 0;
+    topCamera.position.y = 120;
+    topCamera.position.z = 0;
     topCamera.lookAt(scene.position);
 }
 
 function createOrthographicCamera() {
     'use strict';
-    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / - 2,
-                                        window.innerWidth / 2,
-                                        window.innerHeight / 2,
-                                        window.innerHeight / - 2,
+    orthographicCamera = new THREE.OrthographicCamera(window.innerWidth / - 12,
+                                        window.innerWidth / 12,
+                                        window.innerHeight / 12,
+                                        window.innerHeight / - 12,
                                         1,
                                         1000);
                                          
@@ -306,8 +312,8 @@ function createPerspectiveCamera() {
                                          1,
                                          1000);
     perspectiveCamera.position.x = 50;
-    perspectiveCamera.position.y = 50;
-    perspectiveCamera.position.z = 50;
+    perspectiveCamera.position.y = 100;
+    perspectiveCamera.position.z = -50;
     perspectiveCamera.lookAt(scene.position);
 }
 
@@ -352,7 +358,6 @@ function handleCollisions(){
 ////////////
 function update(){
     'use strict';
-
 }
 
 /////////////
@@ -378,17 +383,11 @@ function init() {
     createScene();
     createCamera();
 
-    createFrontalCamera();
-    createSideCamera();
-    createTopCamera();
-    createOrthographicCamera();
-    createPerspectiveCamera();
-    createMovablePerspectiveCamera();
-
     render();
-
+    
+    
     window.addEventListener("keydown", onKeyDown);
-    //window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize);
 }
 
 /////////////////////
@@ -403,8 +402,15 @@ function animate() {
 ////////////////////////////
 /* RESIZE WINDOW CALLBACK */
 ////////////////////////////
-function onResize() { 
+function onResize() {
     'use strict';
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    if (window.innerHeight > 0 && window.innerWidth > 0) {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    }
 
 }
 
@@ -415,27 +421,49 @@ function onKeyDown(e) {
     'use strict';
 
     switch (e.keyCode) {
-        case 1: //frontal
+        case 49: //frontal
+            createFrontalCamera();
             camera = frontalCamera;
-        case 2: //lateral
+            break;
+        case 50: //lateral
+            createSideCamera();
             camera = sideCamera;
-        case 3:  //topo
+            break;
+        case 51:  //topo
+            createTopCamera();
             camera = topCamera;
-        case 4: //fixa projecao ortogonal
+            break;
+        case 52: //fixa projecao ortogonal
+            createOrthographicCamera();
             camera = orthographicCamera;
-        case 5:  //fixa projecao prespetiva
+            break;
+        case 53:  //fixa projecao prespetiva
+            createPerspectiveCamera();
             camera = perspectiveCamera;
-        case 6: //movel prespetiva
+            break;
+        case 54: //movel prespetiva
+            createMovablePerspectiveCamera();
             camera = movablePerspectiveCamera;
+            break;
+        case 55: // tecla 7
+            scene.traverse(function (node) {
+                if (node instanceof THREE.Mesh) {
+                    node.material.wireframe = !node.material.wireframe;
+                }
+            });
+            break;
 
 
         case 81: //Q
-
         case 113: //q
-
+            //topSection.getWorldPosition(new THREE.Vector3(0,0,0)) += Math.PI / 90;
+            topSection.rotation.y += Math.PI / 90;
+            break;
+        
         case 65: //A
-
         case 97: //a
+            topSection.rotation.y -= Math.PI / 90; // Rotate by 1 degree (adjust as needed)
+            break;
 
         case 87: //W
 
@@ -462,6 +490,43 @@ function onKeyDown(e) {
         case 102: //f
     }
 }
+
+//////////
+/* HUD */
+/////////
+
+// Criar o elemento para o HUD
+var hud = document.createElement('div');
+hud.id = 'hud';
+hud.style.position = 'fixed';
+hud.style.top = '10px';
+hud.style.left = '10px';
+hud.style.fontFamily = 'Arial, sans-serif';
+hud.style.fontSize = '18px';
+hud.style.color = 'white';
+hud.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+hud.style.padding = '10px';
+document.body.appendChild(hud);
+
+// Objeto para rastrear as teclas pressionadas
+var keysPressed = {};
+
+// Atualizar o HUD com as teclas pressionadas
+function updateHUD() {
+    hud.textContent = "Teclas pressionadas: " + Object.keys(keysPressed).join(', ');
+}
+
+// Event listener para quando uma tecla é pressionada
+window.addEventListener('keydown', function(event) {
+    keysPressed[event.key] = true;
+    updateHUD();
+});
+
+// Event listener para quando uma tecla é solta
+window.addEventListener('keyup', function(event) {
+    delete keysPressed[event.key];
+    updateHUD();
+});
 
 ///////////////////////
 /* KEY UP CALLBACK */
