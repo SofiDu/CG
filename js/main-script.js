@@ -15,6 +15,7 @@ var crane,topSection,claw,clawSection;
 
 var object1,object2,bin;
 
+var materials = []
 
 /*
 . As peças são as seguintes: (i) base da grua, (ii) torre metálica com
@@ -134,6 +135,7 @@ function createObject1(x,y,z){
     var geometry = new THREE.BoxGeometry(1, 1, 1); 
     var mesh = new THREE.Mesh(geometry, material);
 
+    materials.push(material);
     object1.add(mesh);
     object1.position.set(x, y, z);
 
@@ -149,6 +151,7 @@ function createObject2(x,y,z){
     var geometry = new THREE.BoxGeometry(2, 1, 1); 
     var mesh = new THREE.Mesh(geometry, material);
 
+    materials.push(material);
     object2.add(mesh);
     object2.position.set(x, y, z);
 
@@ -165,6 +168,7 @@ function createBin(x, y, z) {
     var geometry = new THREE.BoxGeometry(15, 20, 10); 
     var mesh = new THREE.Mesh(geometry, material);
 
+    materials.push(material);
     bin.add(mesh);
     bin.position.set(x, y, z);
 
@@ -180,6 +184,7 @@ function createCrane(x, y, z) {
     clawSection = new THREE.Object3D();
 
     material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    materials.push(material);
 
     //claw
     addClaw(claw , 68,22.75,-10)
@@ -446,14 +451,10 @@ function onKeyDown(e) {
             camera = movablePerspectiveCamera;
             break;
         case 55: // tecla 7
-            scene.traverse(function (node) {
-                if (node instanceof THREE.Mesh) {
-                    node.material.wireframe = !node.material.wireframe;
-                }
-            });
+            for (let i=0; i<materials.length; i++) {
+                materials[i].wireframe = !materials[i].wireframe
+            }
             break;
-
-
         case 81: //Q
         case 113: //q
             //topSection.getWorldPosition(new THREE.Vector3(0,0,0)) += Math.PI / 90;
