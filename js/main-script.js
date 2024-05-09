@@ -67,14 +67,6 @@ function addJibHolder(obj, x, y, z) {
     obj.add(mesh);
 }
 
-function addJibTle(obj, x, y, z) {
-    'use strict';
-    geometry = new THREE.BoxGeometry(2, 6, 2); 
-    var mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y , z);
-    obj.add(mesh);
-}
-
 function addCounterBalance(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(5, 2.5, 2.5); 
@@ -86,7 +78,7 @@ function addCounterBalance(obj, x, y, z) {
 function addCab(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(7.5, 5, 7.5); 
-    var mesh = new THREE.Mesh(geometry, material);
+    var mesh = new THREE.Mesh(geometry, mesh);
     mesh.position.set(x, y , z);
     obj.add(mesh);
 }
@@ -187,26 +179,26 @@ function createCrane(x, y, z) {
     materials.push(material);
 
     //claw
-    addClaw(claw , 68,22.75,-10)
-    addClaw(claw , 70,22.75,-12)
-    addClaw(claw , 70,22.75,-8)
-    addClaw(claw , 72,22.75,-10)
+    addClaw(claw , 49,21.75,0)
+    addClaw(claw , 50,21.75,-1)
+    addClaw(claw , 50,21.75,1)
+    addClaw(claw , 51,21.75,0)
 
     //claw section
     clawSection.add(claw);
-    addBlock(clawSection,70,22.75,-10);
-    addSteelCable(clawSection,70,36.25,-10);
-    addTrolley(clawSection,70,48.75,-10);
+    addBlock(clawSection,50,22.75,0);
+    addSteelCable(clawSection,50,36.25,0);
+    addTrolley(clawSection,50,48.75,0);
 
     //top section
+    topSection.position.set(20,0,-10);
     topSection.add(clawSection)
-    addCab(topSection, 20, 47.5, -10);
-    addCounterJib(topSection, 10, 52.5, -10);
-    addCounterBalance(topSection, 8, 50 , -10);
-    addJibHolder(topSection, 20, 58.5, -10);
-    addJib(topSection, 45, 52.5, -10);
+    addCab(topSection, 0, 47.5, -0);
+    addCounterJib(topSection, -10, 52.5, 0);
+    addCounterBalance(topSection, -12, 50 , 0);
+    addJibHolder(topSection, 0, 58.5, -0);
+    addJib(topSection, 25, 52.5, 0);
 
-    crane.add(topSection);
     addBase(crane, 20,2.5,-10);
     addTower(crane,20,25,-10);
     crane.add(topSection);
@@ -217,18 +209,6 @@ function createCrane(x, y, z) {
     crane.position.z = z;
 
     scene.add(crane);
-
-
-    var pivotTopSection = new THREE.Object3D();
-    pivotTopSection.position.x = x;
-    pivotTopSection.position.y = y;
-    pivotTopSection.position.z = z;
-    pivotTopSection.add(topSection);
-    crane.add(pivotTopSection);
-    crane.pivotTopSection = pivotTopSection;
-
-    crane.userData.initialPosition = new THREE.Vector3(x, y, z);
-    crane.userData.initialRotation = new THREE.Euler();
 }
 
 //function restoreTopCrane() {
@@ -495,19 +475,12 @@ function onKeyDown(e) {
             break;
         case 81: //Q
         case 113: //q
-            //topSection.getWorldPosition(new THREE.Vector3(0,0,0)) += Math.PI / 90;
-            //topSection.rotation.y += Math.PI / 90;
-
-            crane.pivotTopSection.rotation.y += Math.PI / 90;
-            //restoreTopCrane();
+            topSection.rotation.y += Math.PI / 90;
             break;
         
         case 65: //A
         case 97: //a
-            //topSection.rotation.y -= Math.PI / 90; // Rotate by 1 degree (adjust as needed)
-
-            crane.pivotTopSection.rotation.y -= Math.PI / 90;
-            //restoreTopCrane();
+            topSection.rotation.y -= Math.PI / 90;
             break;
 
         case 87: //W
