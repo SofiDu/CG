@@ -148,6 +148,7 @@ function createObjects() {
             scene.add(colSphere);
             colObjects.push(colSphere);
             scene.add(obj);
+            materials.push(material);
             continue;
         }
         i--;
@@ -159,7 +160,6 @@ function checkObjectCollisions(obj) {
 
     for (let i=0; i<colObjects.length; i++) {
         if (obj.position.distanceToSquared(colObjects[i].position) < (obj.scale.x + colObjects[i].scale.x)**2) {
-            console.log("epic fail");
             return true;
         }
     }
