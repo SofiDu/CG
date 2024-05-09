@@ -61,7 +61,7 @@ function addCounterJib(obj, x, y, z) {
 
 function addJibHolder(obj, x, y, z) {
     'use strict';
-    geometry = new THREE.TetrahedronGeometry(2); 
+    geometry = new THREE.ConeGeometry(2, 5, 4); 
     var mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y , z);
     obj.add(mesh);
@@ -274,7 +274,7 @@ function createSideCamera() {
                                         1000);
     sideCamera.position.x = 0;
     sideCamera.position.y = 30;
-    sideCamera.position.z = 50;
+    sideCamera.position.z = 70;
     sideCamera.lookAt(scene.position);
 }
 function createTopCamera() {
@@ -324,9 +324,9 @@ function createMovablePerspectiveCamera() { // ????????
                                          window.innerWidth / window.innerHeight,
                                          1,
                                          1000);
-    movablePerspectiveCamera.position.x = 70;
+    movablePerspectiveCamera.position.x = 50;
     movablePerspectiveCamera.position.y = 48.75;
-    movablePerspectiveCamera.position.z = -10;
+    movablePerspectiveCamera.position.z = 0;
     movablePerspectiveCamera.lookAt(movablePerspectiveCamera.position.x, 0, movablePerspectiveCamera.position.z);
     clawSection.add(movablePerspectiveCamera);
 }
