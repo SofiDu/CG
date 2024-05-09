@@ -217,8 +217,24 @@ function createCrane(x, y, z) {
     crane.position.z = z;
 
     scene.add(crane);
+
+
+    var pivotTopSection = new THREE.Object3D();
+    pivotTopSection.position.x = x;
+    pivotTopSection.position.y = y;
+    pivotTopSection.position.z = z;
+    pivotTopSection.add(topSection);
+    crane.add(pivotTopSection);
+    crane.pivotTopSection = pivotTopSection;
+
+    crane.userData.initialPosition = new THREE.Vector3(x, y, z);
+    crane.userData.initialRotation = new THREE.Euler();
 }
 
+//function restoreTopCrane() {
+//    crane.position.copy(crane.userData.initialPosition);
+//    crane.rotation.copy(crane.userData.initialRotation);
+//}
 
 /////////////////////
 /* CREATE SCENE(S) */
@@ -478,12 +494,18 @@ function onKeyDown(e) {
         case 81: //Q
         case 113: //q
             //topSection.getWorldPosition(new THREE.Vector3(0,0,0)) += Math.PI / 90;
-            topSection.rotation.y += Math.PI / 90;
+            //topSection.rotation.y += Math.PI / 90;
+
+            crane.pivotTopSection.rotation.y += Math.PI / 90;
+            //restoreTopCrane();
             break;
         
         case 65: //A
         case 97: //a
-            topSection.rotation.y -= Math.PI / 90; // Rotate by 1 degree (adjust as needed)
+            //topSection.rotation.y -= Math.PI / 90; // Rotate by 1 degree (adjust as needed)
+
+            crane.pivotTopSection.rotation.y -= Math.PI / 90;
+            //restoreTopCrane();
             break;
 
         case 87: //W
@@ -564,7 +586,7 @@ folder.add({ 5: 'projeção prespetiva' }, '5').name('5');
 folder.add({ 6: 'móvel' }, '6').name('6');
 
 const folder1 = gui.addFolder('Q(q) e A(a) - rotação da secção superior');
-folder1.add({ info: 'Additional information about rotation' }, 'info').name('Info');
+folder1.add({ info: 'q- rotação contra-relógio a- rotação sentido relógio' }, 'info').name('Info');
 
 const folder2 = gui.addFolder('W(w) e S(s) - translação do trolley');
 folder2.add({ info: 'w- frente s-trás' }, 'info').name('Info');
