@@ -131,7 +131,7 @@ function createObject1(x,y,z){
 
     object1 = new THREE.Object3D();
 
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
     var geometry = new THREE.BoxGeometry(1, 1, 1); 
     var mesh = new THREE.Mesh(geometry, material);
 
@@ -147,7 +147,7 @@ function createObject2(x,y,z){
 
     object2 = new THREE.Object3D();
 
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
     var geometry = new THREE.BoxGeometry(2, 1, 1); 
     var mesh = new THREE.Mesh(geometry, material);
 
@@ -164,7 +164,7 @@ function createBin(x, y, z) {
 
     bin = new THREE.Object3D();
 
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
     var geometry = new THREE.BoxGeometry(15, 20, 10); 
     var mesh = new THREE.Mesh(geometry, material);
 
@@ -183,7 +183,7 @@ function createCrane(x, y, z) {
     claw = new THREE.Object3D();
     clawSection = new THREE.Object3D();
 
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: false });
     materials.push(material);
 
     //claw
@@ -202,7 +202,7 @@ function createCrane(x, y, z) {
     topSection.add(clawSection)
     addCab(topSection, 20, 47.5, -10);
     addCounterJib(topSection, 10, 52.5, -10);
-    addCounterBalance(topSection, 8, 50 , -1);
+    addCounterBalance(topSection, 8, 50 , -10);
     addJibHolder(topSection, 20, 58.5, -10);
     addJib(topSection, 45, 52.5, -10);
 
@@ -399,6 +399,7 @@ function init() {
 /* ANIMATION CYCLE */
 /////////////////////
 function animate() {
+    update();
     render();
     requestAnimationFrame(animate);
     'use strict';
@@ -415,6 +416,25 @@ function onResize() {
     if (window.innerHeight > 0 && window.innerWidth > 0) {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
+    }
+
+}
+
+///////////////////////
+/* Translaction for trolley */
+///////////////////////
+function move_trolley(key){
+
+    if(key == 87|| key == 119){
+        if (clawSection.position.x < 0 ){
+            clawSection.position.x += 1;
+        }
+    }
+
+    if(key == 83|| key == 115){
+        if (clawSection.position.x > -43){
+            clawSection.position.x -= 1;
+        }
     }
 
 }
@@ -467,13 +487,17 @@ function onKeyDown(e) {
             break;
 
         case 87: //W
-
+            move_trolley(87);
+            break;
         case 119: //w
-
+            move_trolley(119);
+            break;
         case 83: //S
-
+            move_trolley(83);
+            break;
         case 115: //s
-
+            move_trolley(115);  
+            break;
         case 69: //E
 
         case 101: //e
@@ -528,6 +552,36 @@ window.addEventListener('keyup', function(event) {
     delete keysPressed[event.key];
     updateHUD();
 });
+
+const gui = new GUI();
+
+const folder = gui.addFolder('Câmaras');
+folder.add({ 1: 'frontal' }, '1').name('1');
+folder.add({ 2: 'lateral' }, '2').name('2');
+folder.add({ 3: 'topo' }, '3').name('3');
+folder.add({ 4: 'projeção ortogonal' }, '4').name('4');
+folder.add({ 5: 'projeção prespetiva' }, '5').name('5');
+folder.add({ 6: 'móvel' }, '6').name('6');
+
+const folder1 = gui.addFolder('Q(q) e A(a) - rotação da secção superior');
+folder1.add({ info: 'Additional information about rotation' }, 'info').name('Info');
+
+const folder2 = gui.addFolder('W(w) e S(s) - translação do trolley');
+folder2.add({ info: 'w- frente s-trás' }, 'info').name('Info');
+
+
+const folder3 = gui.addFolder('E(e) e D(d) - translação do gancho');
+folder3.add({ info: 'Additional information about hook translation' }, 'info').name('Info');
+
+
+const folder4 = gui.addFolder('R(r) e F(f) - abertura e fecho da garra');
+folder4.add({ info: 'Additional information about hook translation' }, 'info').name('Info');
+
+gui.open();
+
+
+
+
 
 ///////////////////////
 /* KEY UP CALLBACK */
