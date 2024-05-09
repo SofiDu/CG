@@ -131,7 +131,7 @@ function createObject1(x,y,z){
 
     object1 = new THREE.Object3D();
 
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
     var geometry = new THREE.BoxGeometry(1, 1, 1); 
     var mesh = new THREE.Mesh(geometry, material);
 
@@ -147,7 +147,7 @@ function createObject2(x,y,z){
 
     object2 = new THREE.Object3D();
 
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
     var geometry = new THREE.BoxGeometry(2, 1, 1); 
     var mesh = new THREE.Mesh(geometry, material);
 
@@ -164,7 +164,7 @@ function createBin(x, y, z) {
 
     bin = new THREE.Object3D();
 
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
     var geometry = new THREE.BoxGeometry(15, 20, 10); 
     var mesh = new THREE.Mesh(geometry, material);
 
@@ -183,7 +183,7 @@ function createCrane(x, y, z) {
     claw = new THREE.Object3D();
     clawSection = new THREE.Object3D();
 
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: false });
     materials.push(material);
 
     //claw
@@ -202,7 +202,7 @@ function createCrane(x, y, z) {
     topSection.add(clawSection)
     addCab(topSection, 20, 47.5, -10);
     addCounterJib(topSection, 10, 52.5, -10);
-    addCounterBalance(topSection, 8, 50 , -1);
+    addCounterBalance(topSection, 8, 50 , -10);
     addJibHolder(topSection, 20, 58.5, -10);
     addJib(topSection, 45, 52.5, -10);
 
@@ -328,10 +328,11 @@ function createMovablePerspectiveCamera() { // ????????
                                          window.innerWidth / window.innerHeight,
                                          1,
                                          1000);
-    movablePerspectiveCamera.position.x = 50;
-    movablePerspectiveCamera.position.y = 50;
-    movablePerspectiveCamera.position.z = 50;
-    movablePerspectiveCamera.lookAt(scene.position);
+    movablePerspectiveCamera.position.x = 70;
+    movablePerspectiveCamera.position.y = 48.75;
+    movablePerspectiveCamera.position.z = -10;
+    movablePerspectiveCamera.lookAt(movablePerspectiveCamera.position.x, 0, movablePerspectiveCamera.position.z);
+    clawSection.add(movablePerspectiveCamera);
 }
 
 /////////////////////
@@ -388,6 +389,13 @@ function init() {
     createScene();
     createCamera();
 
+    createMovablePerspectiveCamera();
+    createFrontalCamera();
+    createSideCamera();
+    createTopCamera();
+    createOrthographicCamera();
+    createPerspectiveCamera();
+
     render();
     
     
@@ -420,6 +428,25 @@ function onResize() {
 }
 
 ///////////////////////
+/* Translaction for trolley */
+///////////////////////
+function move_trolley(key){
+
+    if(key == 87|| key == 119){
+        if (clawSection.position.x < 0 ){
+            clawSection.position.x += 1;
+        }
+    }
+
+    if(key == 83|| key == 115){
+        if (clawSection.position.x > -43){
+            clawSection.position.x -= 1;
+        }
+    }
+
+}
+
+///////////////////////
 /* KEY DOWN CALLBACK */
 ///////////////////////
 function onKeyDown(e) {
@@ -427,27 +454,21 @@ function onKeyDown(e) {
 
     switch (e.keyCode) {
         case 49: //frontal
-            createFrontalCamera();
             camera = frontalCamera;
             break;
         case 50: //lateral
-            createSideCamera();
             camera = sideCamera;
             break;
         case 51:  //topo
-            createTopCamera();
             camera = topCamera;
             break;
         case 52: //fixa projecao ortogonal
-            createOrthographicCamera();
             camera = orthographicCamera;
             break;
         case 53:  //fixa projecao prespetiva
-            createPerspectiveCamera();
             camera = perspectiveCamera;
             break;
         case 54: //movel prespetiva
-            createMovablePerspectiveCamera();
             camera = movablePerspectiveCamera;
             break;
         case 55: // tecla 7
@@ -467,13 +488,17 @@ function onKeyDown(e) {
             break;
 
         case 87: //W
-
+            move_trolley(87);
+            break;
         case 119: //w
-
+            move_trolley(119);
+            break;
         case 83: //S
-
+            move_trolley(83);
+            break;
         case 115: //s
-
+            move_trolley(115);  
+            break;
         case 69: //E
 
         case 101: //e
