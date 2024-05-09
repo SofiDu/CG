@@ -13,9 +13,11 @@ var geometry, material, mesh,material2;
 
 var crane,topSection,claw,clawSection;
 
-var object1,object2,bin;
+var bin;
 
-var materials = []
+var materials = [];
+
+var colObjects = [];
 
 /*
 . As peças são as seguintes: (i) base da grua, (ii) torre metálica com
@@ -78,8 +80,10 @@ function addCounterBalance(obj, x, y, z) {
 function addCab(obj, x, y, z) {
     'use strict';
     geometry = new THREE.BoxGeometry(7.5, 5, 7.5); 
-    var mesh = new THREE.Mesh(geometry, mesh);
+    var cabMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false });
+    var mesh = new THREE.Mesh(geometry, cabMaterial);
     mesh.position.set(x, y , z);
+    materials.push(cabMaterial);
     obj.add(mesh);
 }
 
@@ -118,37 +122,50 @@ function addSteelCable(obj, x, y, z) {
 
 
 //objects
-function createObject1(x,y,z){
+
+function createObjects() {
     'use strict';
+    for (let i=0; i<5; i++) {
+        var x = Math.random()*40;
+        var z = Math.random()*30;   
+        var scale = Math.random()*2+1;
+        var obj = new THREE.Object3D();
+        var material = new THREE.MeshBasicMaterial({color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+                                                    wireframe: false})
+        var geometry = new THREE.BoxGeometry(scale, scale, scale);
+        var mesh = new THREE.Mesh(geometry, material);
+        obj.add(mesh);
+        obj.position.set(x,0,z);
 
-    object1 = new THREE.Object3D();
-
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
-    var geometry = new THREE.BoxGeometry(1, 1, 1); 
-    var mesh = new THREE.Mesh(geometry, material);
-
-    materials.push(material);
-    object1.add(mesh);
-    object1.position.set(x, y, z);
-
-    scene.add(object1);
+        var colSphere = new THREE.Object3D();
+        geometry = new THREE.SphereGeometry();
+        mesh = new THREE.Mesh(geometry, material);
+        colSphere.add(mesh);
+        colSphere.position.set(x,0,z);
+        colSphere.visible = false;
+        colSphere.scale.set(scale,scale,scale);
+        if (!checkObjectCollisions(colSphere)) {
+            scene.add(colSphere);
+            colObjects.push(colSphere);
+            scene.add(obj);
+            continue;
+        }
+        i--;
+    }
 }
 
-function createObject2(x,y,z){
+function checkObjectCollisions(obj) {
     'use strict';
 
-    object2 = new THREE.Object3D();
-
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
-    var geometry = new THREE.BoxGeometry(2, 1, 1); 
-    var mesh = new THREE.Mesh(geometry, material);
-
-    materials.push(material);
-    object2.add(mesh);
-    object2.position.set(x, y, z);
-
-    scene.add(object2);
+    for (let i=0; i<colObjects.length; i++) {
+        if (obj.position.distanceToSquared(colObjects[i].position) < (obj.scale.x + colObjects[i].scale.x)**2) {
+            console.log("epic fail");
+            return true;
+        }
+    }
+    return false;
 }
+
 
 //bin
 function createBin(x, y, z) {
@@ -175,7 +192,7 @@ function createCrane(x, y, z) {
     claw = new THREE.Object3D();
     clawSection = new THREE.Object3D();
 
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: false });
+    material = new THREE.MeshBasicMaterial({ color: 0xa6a6a6, wireframe: false });
     materials.push(material);
 
     //claw
@@ -227,9 +244,8 @@ function createScene(){
     scene.add(new THREE.AxesHelper(10));
 
     createCrane(0,0,0);
-    createObject1(35, 0, 1);
-    createObject2(40,0,0);
-    createBin(60,0,0);  
+    createBin(60,0,0);
+    createObjects();  
 }
 
 
