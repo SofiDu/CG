@@ -213,7 +213,7 @@ function createCrane(x, y, z) {
     addCab(topSection, 0, 47.5, -0);
     addCounterJib(topSection, -10, 52.5, 0);
     addCounterBalance(topSection, -12, 50 , 0);
-    addJibHolder(topSection, 0, 58.5, -0);
+    addJibHolder(topSection, 0, 57.5, -0);
     addJib(topSection, 25, 52.5, 0);
 
     addBase(crane, 20,2.5,-10);
@@ -260,9 +260,9 @@ function createCamera() {
                                          window.innerWidth / window.innerHeight,
                                          1,
                                          1000);
-    camera.position.x = 50;
+    camera.position.x = 90;
     camera.position.y = 50;
-    camera.position.z = 50;
+    camera.position.z = 70;
     camera.lookAt(scene.position);
 }
 
@@ -569,26 +569,33 @@ window.addEventListener('keyup', function(event) {
 const gui = new GUI();
 
 const folder = gui.addFolder('Câmaras');
-folder.add({ 1: 'frontal' }, '1').name('1');
-folder.add({ 2: 'lateral' }, '2').name('2');
-folder.add({ 3: 'topo' }, '3').name('3');
-folder.add({ 4: 'projeção ortogonal' }, '4').name('4');
-folder.add({ 5: 'projeção prespetiva' }, '5').name('5');
-folder.add({ 6: 'móvel' }, '6').name('6');
+folder.add({ 1: 'Frontal' }, '1').name('1');
+folder.add({ 2: 'Lateral' }, '2').name('2');
+folder.add({ 3: 'Topo' }, '3').name('3');
+folder.add({ 4: 'Projeção Ortogonal' }, '4').name('4');
+folder.add({ 5: 'Projeção Perspetiva' }, '5').name('5');
+folder.add({ 6: 'Móvel' }, '6').name('6');
 
-const folder1 = gui.addFolder('Q(q) e A(a) - rotação da secção superior');
-folder1.add({ info: 'q- rotação contra-relógio a- rotação sentido relógio' }, 'info').name('Info');
+const folder0 = gui.addFolder('Alternar modelo arames/sólido');
+folder0.add({ 7: 'Modelo arames/sólido' }, '7').name('7');
 
-const folder2 = gui.addFolder('W(w) e S(s) - translação do trolley');
-folder2.add({ info: 'w- frente s-trás' }, 'info').name('Info');
+const folder1 = gui.addFolder('Q(q) e A(a) - Rotação da secção superior');
+folder1.add({ info: 'Contra-relógio' }, 'info').name('Q(q)');
+folder1.add({ info: 'Sentido relógio' }, 'info').name('A(a)');
+
+const folder2 = gui.addFolder('W(w) e S(s) - Translação do trolley');
+folder2.add({ info: 'Frente' }, 'info').name('W(w)');
+folder2.add({ info: 'Trás' }, 'info').name('S(s)');
 
 
-const folder3 = gui.addFolder('E(e) e D(d) - translação do gancho');
-folder3.add({ info: 'Additional information about hook translation' }, 'info').name('Info');
+const folder3 = gui.addFolder('E(e) e D(d) - Translação do gancho');
+folder3.add({ info: 'Additional info' }, 'info').name('E(e)');
+folder3.add({ info: 'Additional info' }, 'info').name('D(d)');
 
 
-const folder4 = gui.addFolder('R(r) e F(f) - abertura e fecho da garra');
-folder4.add({ info: 'Additional information about hook translation' }, 'info').name('Info');
+const folder4 = gui.addFolder('R(r) e F(f) - Abertura e fecho da garra');
+folder4.add({ info: 'Additional info' }, 'info').name('R(r)');
+folder4.add({ info: 'Additional info' }, 'info').name('F(f)');
 
 gui.open();
 
