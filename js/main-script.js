@@ -344,10 +344,11 @@ function createMovablePerspectiveCamera() { // ????????
                                          window.innerWidth / window.innerHeight,
                                          1,
                                          1000);
-    movablePerspectiveCamera.position.x = 50;
-    movablePerspectiveCamera.position.y = 50;
-    movablePerspectiveCamera.position.z = 50;
-    movablePerspectiveCamera.lookAt(scene.position);
+    movablePerspectiveCamera.position.x = 70;
+    movablePerspectiveCamera.position.y = 48.75;
+    movablePerspectiveCamera.position.z = -10;
+    movablePerspectiveCamera.lookAt(movablePerspectiveCamera.position.x, 0, movablePerspectiveCamera.position.z);
+    clawSection.add(movablePerspectiveCamera);
 }
 
 /////////////////////
@@ -403,6 +404,13 @@ function init() {
 
     createScene();
     createCamera();
+
+    createMovablePerspectiveCamera();
+    createFrontalCamera();
+    createSideCamera();
+    createTopCamera();
+    createOrthographicCamera();
+    createPerspectiveCamera();
 
     render();
     
@@ -463,27 +471,21 @@ function onKeyDown(e) {
 
     switch (e.keyCode) {
         case 49: //frontal
-            createFrontalCamera();
             camera = frontalCamera;
             break;
         case 50: //lateral
-            createSideCamera();
             camera = sideCamera;
             break;
         case 51:  //topo
-            createTopCamera();
             camera = topCamera;
             break;
         case 52: //fixa projecao ortogonal
-            createOrthographicCamera();
             camera = orthographicCamera;
             break;
         case 53:  //fixa projecao prespetiva
-            createPerspectiveCamera();
             camera = perspectiveCamera;
             break;
         case 54: //movel prespetiva
-            createMovablePerspectiveCamera();
             camera = movablePerspectiveCamera;
             break;
         case 55: // tecla 7
