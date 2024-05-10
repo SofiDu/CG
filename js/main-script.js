@@ -199,15 +199,34 @@ function createBin(x, y, z) {
 
     bin = new THREE.Object3D();
 
-    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
-    var geometry = new THREE.BoxGeometry(15, 20, 10); 
-    var mesh = new THREE.Mesh(geometry, material);
+    var materialBase = new THREE.MeshBasicMaterial({ color: 0x333333, wireframe: false });
+    var geometryBase = new THREE.BoxGeometry(15, 1, 20); 
+    var meshBase = new THREE.Mesh(geometryBase, materialBase);
 
-    materials.push(material);
-    bin.add(mesh);
+    materials.push(materialBase);
+    bin.add(meshBase);
     bin.position.set(x, y, z);
 
     scene.add(bin);
+    var materialSides = new THREE.MeshBasicMaterial({ color: 0xcccc44, wireframe: false });
+    materials.push(materialSides);
+    var geometrySides1 = new THREE.BoxGeometry(1, 11, 20);
+    var meshSides1 = new THREE.Mesh(geometrySides1, materialSides);
+    meshSides1.position.set(-7.5, 5, 0);
+    bin.add(meshSides1);
+
+    var meshSides2 = new THREE.Mesh(geometrySides1, materialSides);
+    meshSides2.position.set(7.5, 5, 0);
+    bin.add(meshSides2);
+
+    var geometrySides2 = new THREE.BoxGeometry(15, 11, 1);
+    var meshSides3 = new THREE.Mesh(geometrySides2, materialSides);
+    meshSides3.position.set(0,5,10);
+    bin.add(meshSides3);
+
+    var meshSides4 = new THREE.Mesh(geometrySides2, materialSides);
+    meshSides4.position.set(0,5,-10);
+    bin.add(meshSides4);
 }
 
 
