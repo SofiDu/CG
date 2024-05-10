@@ -125,35 +125,61 @@ function addSteelCable(obj, x, y, z) {
 
 function createObjects() {
     'use strict';
-    for (let i=0; i<5; i++) {
-        var x = Math.random()*40;
-        var z = Math.random()*30;   
-        var scale = Math.random()*2+1;
-        var obj = new THREE.Object3D();
-        var material = new THREE.MeshBasicMaterial({color: new THREE.Color(Math.random(), Math.random(), Math.random()),
-                                                    wireframe: false})
-        var geometry = new THREE.BoxGeometry(scale, scale, scale);
-        var mesh = new THREE.Mesh(geometry, material);
-        obj.add(mesh);
-        obj.position.set(x,0,z);
 
-        var colSphere = new THREE.Object3D();
-        geometry = new THREE.SphereGeometry();
-        mesh = new THREE.Mesh(geometry, material);
-        colSphere.add(mesh);
-        colSphere.position.set(x,0,z);
-        colSphere.visible = false;
-        colSphere.scale.set(scale,scale,scale);
-        if (!checkObjectCollisions(colSphere)) {
-            scene.add(colSphere);
-            colObjects.push(colSphere);
-            scene.add(obj);
-            materials.push(material);
-            continue;
+    // shapes = [[numberOfObjectsToCreate, Format], ...]
+    const shapes = [[1, 'Cube'], [1, 'Dodecahedron'], [1, 'Icosahedron'], [1, 'Torus'], [1, 'TorusKnot']];
+
+    for(let j = 0; j < shapes.length; j++) {
+        for(let k = 0; k < shapes[j][0]; k++) {
+
+            var x = Math.random()*40;
+            var z = Math.random()*30;   
+            var scale = Math.random()*2+1;
+            var obj = new THREE.Object3D();
+            var material = new THREE.MeshBasicMaterial({color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+                                                        wireframe: false})
+
+            switch(shapes[j][1]) {
+                case 'Cube':
+                    geometry = new THREE.BoxGeometry(scale, scale, scale);
+                    break;
+                case 'Dodecahedron':
+                    geometry = new THREE.DodecahedronGeometry(scale);
+                    break;
+                case 'Icosahedron':
+                    geometry = new THREE.IcosahedronGeometry(scale);
+                    break;
+                case 'Torus':
+                    geometry = new THREE.TorusGeometry(scale, scale / 2, 8, 5);
+                    break;
+                case 'TorusKnot':
+                    geometry = new THREE.TorusKnotGeometry(scale, scale / 2, 12, 6);
+                    break;
+            }
+
+            var mesh = new THREE.Mesh(geometry, material);
+            obj.add(mesh);
+            obj.position.set(x,0,z);
+
+            var colSphere = new THREE.Object3D();
+            geometry = new THREE.SphereGeometry();
+            mesh = new THREE.Mesh(geometry, material);
+            colSphere.add(mesh);
+            colSphere.position.set(x,0,z);
+            colSphere.visible = false;
+            colSphere.scale.set(scale,scale,scale);
+            if (!checkObjectCollisions(colSphere)) {
+                scene.add(colSphere);
+                colObjects.push(colSphere);
+                scene.add(obj);
+                materials.push(material);
+                continue;
+            }
+            k--;
         }
-        i--;
     }
 }
+
 
 function checkObjectCollisions(obj) {
     'use strict';
@@ -239,7 +265,7 @@ function createCrane(x, y, z) {
 function createScene(){
     'use strict';
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xb8c7e0 )
+    scene.background = new THREE.Color( 0xa8c7e0 )
 
     scene.add(new THREE.AxesHelper(10));
 
@@ -262,7 +288,7 @@ function createCamera() {
                                          1000);
     camera.position.x = 90;
     camera.position.y = 50;
-    camera.position.z = 70;
+    camera.position.z = 80;
     camera.lookAt(scene.position);
 }
 
@@ -334,7 +360,7 @@ function createPerspectiveCamera() {
     perspectiveCamera.lookAt(scene.position);
 }
 
-function createMovablePerspectiveCamera() { // ????????
+function createMovablePerspectiveCamera() {
     'use strict';
     movablePerspectiveCamera = new THREE.PerspectiveCamera(70,
                                          window.innerWidth / window.innerHeight,
@@ -459,6 +485,25 @@ function move_trolley(key){
 
 }
 
+
+function moveBlockAndClaw(key) {
+
+    if (key === 68 || key === 100) { // 'D(d)'
+        
+        clawSection.children[2].scale.y += 0.1;
+        clawSection.children[2].position.y -= 1.25;
+        clawSection.children[1].position.y -= (clawSection.children[2].position.y * 0.1 / 2.25);
+    }
+
+    if (key === 69 || key === 101) { // 'E(e)'
+
+        clawSection.children[2].scale.y -= 0.1;
+        clawSection.children[2].position.y += 1.25;
+        clawSection.children[1].position.y += (clawSection.children[2].position.y * 0.1 / 2.25);
+    }
+}
+
+
 ///////////////////////
 /* KEY DOWN CALLBACK */
 ///////////////////////
@@ -512,13 +557,17 @@ function onKeyDown(e) {
             move_trolley(115);  
             break;
         case 69: //E
-
+            moveBlockAndClaw(69);
+            break;
         case 101: //e
-
+            moveBlockAndClaw(101);
+            break;
         case 68: //D
-
+            moveBlockAndClaw(68);
+            break;
         case 100: //d
-
+            moveBlockAndClaw(100);
+            break;
         case 82: //R
 
         case 114: //r
@@ -589,13 +638,13 @@ folder2.add({ info: 'Trás' }, 'info').name('S(s)');
 
 
 const folder3 = gui.addFolder('E(e) e D(d) - Translação do gancho');
-folder3.add({ info: 'Additional info' }, 'info').name('E(e)');
-folder3.add({ info: 'Additional info' }, 'info').name('D(d)');
+folder3.add({ info: 'Subir' }, 'info').name('E(e)');
+folder3.add({ info: 'Descer' }, 'info').name('D(d)');
 
 
 const folder4 = gui.addFolder('R(r) e F(f) - Abertura e fecho da garra');
-folder4.add({ info: 'Additional info' }, 'info').name('R(r)');
-folder4.add({ info: 'Additional info' }, 'info').name('F(f)');
+folder4.add({ info: 'Abrir' }, 'info').name('R(r)');
+folder4.add({ info: 'Fechar' }, 'info').name('F(f)');
 
 gui.open();
 
