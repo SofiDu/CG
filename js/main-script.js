@@ -489,17 +489,21 @@ function move_trolley(key){
 function moveBlockAndClaw(key) {
 
     if (key === 68 || key === 100) { // 'D(d)'
-        
-        clawSection.children[2].scale.y += 0.1;
-        clawSection.children[2].position.y -= 1.25;
-        clawSection.children[1].position.y -= (clawSection.children[2].position.y * 0.1 / 2.25);
+        if (clawSection.children[1].position.y > 1) {
+            clawSection.children[2].scale.y += 0.05;
+            clawSection.children[2].position.y -= 0.625;
+            clawSection.children[1].position.y -= 1.25;
+            clawSection.children[0].position.y -= 1.25;
+        }
     }
 
     if (key === 69 || key === 101) { // 'E(e)'
-
-        clawSection.children[2].scale.y -= 0.1;
-        clawSection.children[2].position.y += 1.25;
-        clawSection.children[1].position.y += (clawSection.children[2].position.y * 0.1 / 2.25);
+        if (clawSection.children[1].position.y < 40)  {
+            clawSection.children[2].scale.y -= 0.05;
+            clawSection.children[2].position.y += 0.625;
+            clawSection.children[1].position.y += 1.25;
+            clawSection.children[0].position.y += 1.25;
+        }
     }
 }
 
