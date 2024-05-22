@@ -26,6 +26,15 @@ var objects = [];
 
 var carrossel, cilindroCentral, anelGrande, anelMedio, anelPequeno;
 
+var isMovingAnelGrande = false;
+var isMovingAnelMedio = false;
+var isMovingAnelPequeno = false;
+var moveUpAnelGrande = true;
+var moveUpAnelMedio = true;
+var moveUpAnelPequeno = true;
+
+var clock = new THREE.Clock();
+
 // ------------       parametric functions      ------------------- //
 
 const f1 = function (u, v, target) { // torus shape
@@ -303,6 +312,22 @@ function addCilindroCentral(obj, x, y, z) {
     obj.userData = { mesh: mesh, materials: materialsCilindro, currentMaterialIndex: 1 };
 }
 
+function createSkydome(x, y, z) {
+    var geometry = new THREE.SphereGeometry( 200, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+
+    var texture = new THREE.TextureLoader().load('textures/Skydome.jpg'); 
+
+    var material = new THREE.MeshBasicMaterial( { map:texture, side: THREE.DoubleSide } );
+    //transparent: true, opacity: 0.5
+    //var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+    var sphere = new THREE.Mesh( geometry, material );
+    scene.add( sphere );
+
+    sphere.position.x = x;
+    sphere.position.y = y;
+    sphere.position.z = z;
+}
+
 
 function createCarrossel(x, y, z) {
     'use strict';
@@ -315,8 +340,8 @@ function createCarrossel(x, y, z) {
 
     addCilindroCentral(cilindroCentral, 0, 15, 0);
     addAnelGrande(anelGrande, 0, 3, 0);
-    addAnelMedio(anelMedio, 0, 3, 0); //6
-    addAnelPequeno(anelPequeno, 0, 3, 0); // 10
+    addAnelMedio(anelMedio, 0, 9, 0);
+    addAnelPequeno(anelPequeno, 0, 15, 0);
 
     carrossel.add(cilindroCentral);
     carrossel.add(anelGrande);
@@ -354,10 +379,94 @@ function createScene() {
     scene.add(new THREE.AxesHelper(30));
 
     createCarrossel(0, 0, 0);
-    addShapes(anelGrande, 15);
-    addShapes(anelMedio, 10);
+    addShapes(anelGrande, 17);
+    addShapes(anelMedio, 11);
     addShapes(anelPequeno, 5);
+    createSkydome(0, 0, 0);
 }
+
+
+
+///////////////
+// ROTATIONS //
+///////////////
+
+function rotateCilindroCentral(delta) {
+    cilindroCentral.rotation.y += 2 * delta;
+}
+
+function rotateAnelGrande(delta) {
+    anelGrande.rotation.y += 0.5 * delta;
+}
+
+function rotateAnelMedio(delta) {
+    anelMedio.rotation.y += 2 * delta;
+}
+
+function rotateAnelPequeno(delta) {
+    anelPequeno.rotation.y += 1 * delta;
+}
+
+
+
+///////////////
+// MOVEMENTS //
+///////////////
+
+function moveAnelGrande(delta) {
+    if (isMovingAnelGrande) {
+        if (moveUpAnelGrande) {
+            anelGrande.position.y += 16 * delta;
+            //carrossel.children[1].position.y += 16 * delta;
+            if (anelGrande.position.y >= 24) {
+                moveUpAnelGrande = false;
+            }
+        } else {
+            anelGrande.position.y -= 16 * delta;
+            //carrossel.children[1].position.y -= 16 * delta;
+            if (anelGrande.position.y <= 0) {
+                moveUpAnelGrande = true;
+            }
+        }
+    }
+}
+
+function moveAnelMedio(delta) {
+    if (isMovingAnelMedio) {
+        if (moveUpAnelMedio) {
+            anelMedio.position.y += 16 * delta;
+            //carrossel.children[2].position.y += 16 * delta;
+            if (anelMedio.position.y >= 18) {
+                moveUpAnelMedio = false;
+            }
+        } else {
+            anelMedio.position.y -=16 * delta;
+            //carrossel.children[2].position.y -= 16 * delta;
+            if (anelMedio.position.y <= -6) {
+                moveUpAnelMedio = true;
+            }
+        }
+    }
+}
+
+function moveAnelPequeno(delta) {
+    if (isMovingAnelPequeno) {
+        if (moveUpAnelPequeno) {
+            anelPequeno.position.y += 16 * delta;
+            //carrossel.children[3].position.y += 16 * delta;
+            if (anelPequeno.position.y >= 12) {
+                moveUpAnelPequeno = false;
+            }
+        } else {
+            anelPequeno.position.y -= 16 * delta;
+            //carrossel.children[3].position.y -= 16 * delta;
+            if (anelPequeno.position.y <= -12) {
+                moveUpAnelPequeno = true;
+            }
+        }
+    }
+}
+
 
 
 function createCamera() {
@@ -366,9 +475,9 @@ function createCamera() {
                                          window.innerWidth / window.innerHeight,
                                          1,
                                          1000);
-    camera.position.x = 20;
-    camera.position.y = 20;
-    camera.position.z = 0;
+    camera.position.x = 50;
+    camera.position.y = 50;
+    camera.position.z = 50;
     camera.lookAt(scene.position);
 
 }
@@ -408,7 +517,17 @@ function createAmbientLight() {
 function onKeyDown(e) {
     'use strict';
 
-    switch (e.keyCode) {    
+    switch (e.keyCode) {
+        case 49: // 1
+            isMovingAnelGrande = true;
+            break;
+        case 50: // 2
+            isMovingAnelMedio = true;
+            break;
+        case 51: // 3
+            isMovingAnelPequeno = true;
+            break;
+
         case 68: //D
             directionalLight.visible = !directionalLight.visible;
             break;
@@ -458,6 +577,20 @@ function onKeyDown(e) {
     
 }
 
+function onKeyUp(e) {
+    switch (e.keyCode) {
+        case 49: // 1
+            isMovingAnelGrande = false;
+            break;
+        case 50: // 2
+            isMovingAnelMedio = false;
+            break;
+        case 51: // 3
+            isMovingAnelPequeno = false;
+            break;
+    }
+}
+
 function render() {
     'use strict';
     renderer.render(scene, camera);
@@ -480,11 +613,22 @@ function init() {
     render();
 
     window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
 }
 
 function animate() {
     'use strict';
+    var delta = clock.getDelta();
+
+    moveAnelGrande(delta);
+    moveAnelMedio(delta);
+    moveAnelPequeno(delta);
+
+    rotateCilindroCentral(delta);
+    rotateAnelGrande(delta);
+    rotateAnelMedio(delta);
+    rotateAnelPequeno(delta);
 
     render();
 
