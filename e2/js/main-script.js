@@ -30,6 +30,8 @@ var materialsMedio = [];
 var materialsGrande = [];
 var objects = [];
 
+var directionalLight;
+
 var carrossel, cilindroCentral, anelGrande, anelMedio, anelPequeno, skydome;
 
 var active = true;
@@ -540,7 +542,7 @@ function onResize() {
 /////////////////////
 function createdirectionalLight() {
     'use strict';
-    var directionalLight = new THREE.DirectionalLight( 0xffffff, 1);
+    directionalLight = new THREE.DirectionalLight( 0xffffff, 1);
     scene.add( directionalLight );
     directionalLight.position.set(1, 100, 200);
 }
