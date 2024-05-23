@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { ParametricGeometries } from 'three/addons/geometries/ParametricGeometries.js';
+
+import { VRButton } from 'three/addons/webxr/VRButton.js';
+
 var camera, scene, renderer;
 
 var materials = [
@@ -19,12 +22,18 @@ var materialsCilindro = [
     new THREE.MeshNormalMaterial({wireframe: false })
 ];
 
+var materialsSkydome = [];
+var texture;
+
 var materialsPequeno = [];
 var materialsMedio = [];
 var materialsGrande = [];
 var objects = [];
 
-var carrossel, cilindroCentral, anelGrande, anelMedio, anelPequeno;
+var carrossel, cilindroCentral, anelGrande, anelMedio, anelPequeno, skydome;
+
+var active = true;
+var prevMaterial = 1;
 
 var isMovingAnelGrande = false;
 var isMovingAnelMedio = false;
@@ -34,6 +43,9 @@ var moveUpAnelMedio = true;
 var moveUpAnelPequeno = true;
 
 var clock = new THREE.Clock();
+
+const resetRenderer = () => renderer.setSize(window.innerWidth, window.innerHeight);
+const setupRenderer = () => { resetRenderer(); document.body.appendChild(renderer.domElement); renderer.xr.enabled = true; }
 
 // ------------       parametric functions      ------------------- //
 
@@ -313,19 +325,38 @@ function addCilindroCentral(obj, x, y, z) {
 }
 
 function createSkydome(x, y, z) {
+    skydome = new THREE.Object3D();
+
     var geometry = new THREE.SphereGeometry( 200, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
 
-    var texture = new THREE.TextureLoader().load('textures/Skydome.jpg'); 
+    texture = new THREE.TextureLoader().load('textures/Skydome.jpg');
+
+    /*materialsSkydome = [
+        new THREE.MeshBasicMaterial({ map:texture, side: THREE.DoubleSide }),
+        new THREE.MeshLambertMaterial({ map:texture, side: THREE.DoubleSide }),
+        new THREE.MeshPhongMaterial({ map:texture, side: THREE.DoubleSide }),
+        new THREE.MeshToonMaterial({ map:texture, side: THREE.DoubleSide }),
+        new THREE.MeshNormalMaterial({ normalMap:texture, side: THREE.DoubleSide })
+    ];
+
+    var mesh = new THREE.Mesh(geometry, materialsSkydome[1]);
+    mesh.position.set(x, y, z);
+    skydome.add(mesh);
+    skydome.userData = { mesh: mesh, materials: materialsSkydome, currentMaterialIndex: 1 };*/
+
 
     var material = new THREE.MeshBasicMaterial( { map:texture, side: THREE.DoubleSide } );
     //transparent: true, opacity: 0.5
-    //var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
-    var sphere = new THREE.Mesh( geometry, material );
-    scene.add( sphere );
+    
+    var mesh = new THREE.Mesh( geometry, material );
+    mesh.position.set(x, y, z);
+    skydome.add(mesh);
 
-    sphere.position.x = x;
-    sphere.position.y = y;
-    sphere.position.z = z;
+    scene.add(skydome);
+
+    skydome.position.x = x;
+    skydome.position.y = y;
+    skydome.position.z = z;
 }
 
 
@@ -356,12 +387,20 @@ function createCarrossel(x, y, z) {
 }
 
 function switchMaterialAux(obj, materialIndex) {
+    prevMaterial = obj.userData.currentMaterialIndex;
+
     obj.userData.currentMaterialIndex = materialIndex;
     obj.userData.mesh.material = obj.userData.materials[materialIndex];
     obj.userData.mesh.material.needsUpdate = true;
 }
 
 function switchMaterial(materialIndex) {
+    if(materialIndex != 0) {
+        active = true;
+    } else {
+        active = false;
+    }
+
     scene.traverse(function(child) {
         if (child.userData && child.userData.materials) {
             switchMaterialAux(child, materialIndex); 
@@ -509,7 +548,7 @@ function createdirectionalLight() {
 
 function createAmbientLight() {
     'use strict';
-    var ambientLight = new THREE.AmbientLight(0xff7f00, 0.4); 
+    var ambientLight = new THREE.AmbientLight(0xff7f00, 0.4);
     scene.add(ambientLight);
 }
 
@@ -534,6 +573,7 @@ function onKeyDown(e) {
         case 100: //d
             directionalLight.visible = !directionalLight.visible;
             break;
+
         case 81:  //Q  (Gouraud(diffuse))
             switchMaterial(1); 
             break;
@@ -562,15 +602,24 @@ function onKeyDown(e) {
             break;
 
         case 114:  //r  (NormalMap)
-            switchMaterial(4); 
+            switchMaterial(4);
             break;
 
+
         case 84:  //T  (BasicMaterial)
-            switchMaterial(0);
+            if(active) {
+                switchMaterial(0);
+            } else {
+                switchMaterial(prevMaterial);
+            }
             break;
 
         case 116:  //t  (BasicMaterial)
-            switchMaterial(0);
+            if(active) {
+                switchMaterial(0);
+            } else {
+                switchMaterial(prevMaterial);
+            }
             break;
 
     }
@@ -605,6 +654,9 @@ function init() {
     renderer.setClearColor(0xd3d3d3);
     document.body.appendChild(renderer.domElement);
 
+    document.body.appendChild(VRButton.createButton(renderer));
+    renderer.xr.enabled = true;
+
     createScene();
     createCamera();
     createdirectionalLight();
@@ -632,8 +684,9 @@ function animate() {
 
     render();
 
-    requestAnimationFrame(animate);
+    //requestAnimationFrame(animate);
 }
 
 init();
 animate();
+renderer?.setAnimationLoop(animate);
