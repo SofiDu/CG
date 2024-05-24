@@ -5,6 +5,7 @@ import { ParametricGeometries } from 'three/addons/geometries/ParametricGeometri
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
 var camera, scene, renderer;
+var delta;
 
 var materials = [
     new THREE.MeshBasicMaterial({ color: 0x0000dd, wireframe: false }),
@@ -14,12 +15,20 @@ var materials = [
     new THREE.MeshNormalMaterial({ wireframe: false })
 ];
 
+var materialsObjs = [
+    new THREE.MeshBasicMaterial({ color: 0xccaabb, wireframe: false }),
+    new THREE.MeshLambertMaterial({ color: 0xccaabb, wireframe: false }),
+    new THREE.MeshPhongMaterial({ color: 0xccaabb, wireframe: false }),
+    new THREE.MeshToonMaterial({ color: 0xccaabb, wireframe: false }),
+    new THREE.MeshNormalMaterial({ wireframe: false })
+];
+
 var materialsCilindro = [
-    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false }),
-    new THREE.MeshLambertMaterial({ color: 0xffffff, wireframe: false }),
-    new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: false }),
-    new THREE.MeshToonMaterial({ color: 0xffffff, wireframe: false }),
-    new THREE.MeshNormalMaterial({wireframe: false })
+    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false, side: THREE.FrontSide }),
+    new THREE.MeshLambertMaterial({ color: 0xffffff, wireframe: false, side: THREE.FrontSide }),
+    new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: false, side: THREE.FrontSide }),
+    new THREE.MeshToonMaterial({ color: 0xffffff, wireframe: false, side: THREE.FrontSide }),
+    new THREE.MeshNormalMaterial({wireframe: false, side: THREE.FrontSide })
 ];
 
 var materialsSkydome = [];
@@ -32,7 +41,7 @@ var objects = [];
 
 var directionalLight;
 
-var carrossel, cilindroCentral, anelGrande, anelMedio, anelPequeno, skydome;
+var carrossel, cilindroCentral, anelGrande, anelMedio, anelPequeno, mobius, skydome;
 
 var active = true;
 var prevMaterial = 1;
@@ -152,7 +161,8 @@ function addShapes(obj, r) {
     
 
     var geo1 = new ParametricGeometry( f1, 25, 25 );
-    var obj1 = new THREE.Mesh(geo1,material);
+    var obj1 = new THREE.Mesh(geo1, materialsObjs[1]);
+    //var obj1 = new THREE.Mesh(geo1,material);
     obj1.position.set(r,8,0);
     var scalef = Math.random()*0.1+0.1
     obj1.scale.set(scalef,scalef,scalef)
@@ -166,8 +176,11 @@ function addShapes(obj, r) {
     sl1.target = obj1;
     obj.add(sl1);
 
+    //obj1.rotation.x += 1 * delta;
+
     var geo2 = new ParametricGeometry( f2, 25, 25 );
-    var obj2 = new THREE.Mesh(geo2,material);
+    var obj2 = new THREE.Mesh(geo2, materialsObjs[1]);
+    //var obj2 = new THREE.Mesh(geo2,material);
     obj2.position.set(r*0.7,8,r*0.7);
     var scalef = Math.random()*0.2+0.2
     obj2.scale.set(scalef,scalef,scalef)
@@ -180,9 +193,12 @@ function addShapes(obj, r) {
     sl2.position.set(r*0.7, 5, r*0.7)
     sl2.target = obj2;
     obj.add(sl2);   
+
+    //obj2.rotation.y += 1.5 * delta;
     
     var geo3 = new ParametricGeometry( f3, 25, 25 );
-    var obj3 = new THREE.Mesh(geo3,material);
+    var obj3 = new THREE.Mesh(geo3, materialsObjs[1]);
+    //var obj3 = new THREE.Mesh(geo3,material);
     obj3.position.set(0,8,r);
     var scalef = Math.random()*0.2+0.2
     obj3.scale.set(scalef,scalef,scalef)
@@ -196,8 +212,11 @@ function addShapes(obj, r) {
     sl3.target = obj3;
     obj.add(sl3);    
 
+    //obj3.rotation.x += 1.5 * delta;
+
     var geo4 = new ParametricGeometry( f4, 25, 25 );
-    var obj4 = new THREE.Mesh(geo4,material);
+    var obj4 = new THREE.Mesh(geo4, materialsObjs[1]);
+    //var obj4 = new THREE.Mesh(geo4,material);
     obj4.position.set(-r*0.7,8,r*0.7);
     var scalef = Math.random()*0.2+0.2
     obj4.scale.set(scalef,scalef,scalef)
@@ -211,8 +230,11 @@ function addShapes(obj, r) {
     sl4.target = obj4;
     obj.add(sl4);    
 
+    //obj4.rotation.x += 1 * delta;
+
     var geo5 = new ParametricGeometry( f5, 25, 25 );
-    var obj5 = new THREE.Mesh(geo5,material);
+    var obj5 = new THREE.Mesh(geo5, materialsObjs[1]);
+    //var obj5 = new THREE.Mesh(geo5,material);
     obj5.position.set(-r,8,0);
     var scalef = Math.random()*0.2+0.2
     obj5.scale.set(scalef,scalef,scalef)
@@ -226,8 +248,11 @@ function addShapes(obj, r) {
     sl5.target = obj5;
     obj.add(sl5);    
 
+    //obj5.rotation.z += 2 * delta;
+
     var geo6 = new ParametricGeometry( f6, 25, 25 );
-    var obj6 = new THREE.Mesh(geo6,material);
+    var obj6 = new THREE.Mesh(geo6, materialsObjs[1]);
+    //var obj6 = new THREE.Mesh(geo6,material);
     obj6.position.set(-r*0.7,8,-r*0.7);
     var scalef = Math.random()*0.2+0.2
     obj6.scale.set(scalef,scalef,scalef)
@@ -241,8 +266,13 @@ function addShapes(obj, r) {
     sl6.target = obj6;
     obj.add(sl6);    
 
+    //obj6.rotation.z += 1.5 * delta;
+
     var geo7 = new ParametricGeometry( f7, 25, 25 );
-    var obj7 = new THREE.Mesh(geo7,material);
+
+    var obj7 = new THREE.Mesh(geo7, materialsObjs[1]);
+    //obj.userData = { mesh: mesh, materials: materialsObjs, currentMaterialIndex: 1 };
+    //var obj7 = new THREE.Mesh(geo7,material);
     obj7.position.set(0,8,-r);
     var scalef = Math.random()*0.2+0.2
     obj7.scale.set(scalef,scalef,scalef)
@@ -256,8 +286,14 @@ function addShapes(obj, r) {
     sl7.target = obj7;
     obj.add(sl7);    
 
+    //obj7.rotation.y += 1 * delta;
+
     var geo8 = new ParametricGeometry( ParametricGeometries.klein, 25, 25 );
-    var obj8 = new THREE.Mesh(geo8,material);
+
+    var obj8 = new THREE.Mesh(geo8, materialsObjs[1]);
+    //obj8.userData = { mesh: mesh, materials: materialsObjs, currentMaterialIndex: 1 };
+
+    //var obj8 = new THREE.Mesh(geo8,material);
     obj8.position.set(r*0.7,8,-r*0.7);
     var scalef = Math.random()*0.2+0.1
     obj8.scale.set(scalef,scalef,scalef)
@@ -269,7 +305,9 @@ function addShapes(obj, r) {
     sl8.angle = Math.PI/2
     sl8.position.set(r*0.7,5,-r*0.7)
     sl8.target = obj8;
-    obj.add(sl8);    
+    obj.add(sl8);
+
+    //obj8.rotation.y += 2 * delta;
 }
 
 function addAnelPequeno(obj, x, y, z) {
@@ -326,6 +364,52 @@ function addCilindroCentral(obj, x, y, z) {
     obj.userData = { mesh: mesh, materials: materialsCilindro, currentMaterialIndex: 1 };
 }
 
+
+
+// Extract vertices
+function extractVerticesFromBufferGeometry(geometry) {
+    const positionAttribute = geometry.getAttribute('position');
+    const vertices = [];
+
+    for (let i = 0; i < positionAttribute.count; i++) {
+        const vertex = new THREE.Vector3();
+        vertex.fromBufferAttribute(positionAttribute, i);
+
+        vertex.multiplyScalar(8);
+
+        vertices.push(vertex);
+    }
+
+    return vertices;
+}
+
+function addMobius(obj, x, y, z) {
+    const mobiusFunction = (u, v, target) => {
+        u = u * Math.PI * 2;
+        v = v * 2 - 1;
+
+        const tx = (1 + v / 2 * Math.cos(u / 2)) * Math.cos(u);
+        const ty = v / 2 * Math.sin(u / 2);
+        const tz = (1 + v / 2 * Math.cos(u / 2)) * Math.sin(u);
+
+        target.set(tx, ty, tz);
+    };
+
+    const geometry = new ParametricGeometry(mobiusFunction, 100, 10);
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+    const mesh = new THREE.Mesh(geometry, material);
+
+    obj.scale.multiplyScalar( 8 );
+
+    mesh.position.set(x, y, z);
+    obj.add(mesh);
+
+    // Extract vertices
+    const vertices = extractVerticesFromBufferGeometry(mesh.geometry);
+    //console.log(vertices);
+}
+
+
 function createSkydome(x, y, z) {
     skydome = new THREE.Object3D();
 
@@ -333,7 +417,7 @@ function createSkydome(x, y, z) {
 
     texture = new THREE.TextureLoader().load('textures/Skydome.jpg');
 
-    /*materialsSkydome = [
+    materialsSkydome = [
         new THREE.MeshBasicMaterial({ map:texture, side: THREE.DoubleSide }),
         new THREE.MeshLambertMaterial({ map:texture, side: THREE.DoubleSide }),
         new THREE.MeshPhongMaterial({ map:texture, side: THREE.DoubleSide }),
@@ -344,15 +428,15 @@ function createSkydome(x, y, z) {
     var mesh = new THREE.Mesh(geometry, materialsSkydome[1]);
     mesh.position.set(x, y, z);
     skydome.add(mesh);
-    skydome.userData = { mesh: mesh, materials: materialsSkydome, currentMaterialIndex: 1 };*/
+    skydome.userData = { mesh: mesh, materials: materialsSkydome, currentMaterialIndex: 1 };
 
 
-    var material = new THREE.MeshBasicMaterial( { map:texture, side: THREE.DoubleSide } );
+    /*var material = new THREE.MeshBasicMaterial( { map:texture, side: THREE.DoubleSide } );
     //transparent: true, opacity: 0.5
     
     var mesh = new THREE.Mesh( geometry, material );
     mesh.position.set(x, y, z);
-    skydome.add(mesh);
+    skydome.add(mesh);*/
 
     scene.add(skydome);
 
@@ -370,16 +454,21 @@ function createCarrossel(x, y, z) {
     anelGrande = new THREE.Object3D();
     anelMedio = new THREE.Object3D();
     anelPequeno = new THREE.Object3D();
+    mobius = new THREE.Object3D();
 
     addCilindroCentral(cilindroCentral, 0, 15, 0);
     addAnelGrande(anelGrande, 0, 3, 0);
     addAnelMedio(anelMedio, 0, 9, 0);
     addAnelPequeno(anelPequeno, 0, 15, 0);
 
+    addMobius(mobius, 0, 5, 0);
+
     carrossel.add(cilindroCentral);
     carrossel.add(anelGrande);
     carrossel.add(anelMedio);
     carrossel.add(anelPequeno);
+
+    carrossel.add(mobius);
 
     scene.add(carrossel);
 
@@ -417,7 +506,7 @@ function createScene() {
     scene = new THREE.Scene();
 
 
-    scene.add(new THREE.AxesHelper(30));
+    scene.add(new THREE.AxesHelper(25));
 
     createCarrossel(0, 0, 0);
     addShapes(anelGrande, 17);
@@ -516,9 +605,9 @@ function createCamera() {
                                          window.innerWidth / window.innerHeight,
                                          1,
                                          1000);
-    camera.position.x = 50;
-    camera.position.y = 50;
-    camera.position.z = 50;
+    camera.position.x = 70;
+    camera.position.y = 90;
+    camera.position.z = 70;
     camera.lookAt(scene.position);
 
 }
@@ -657,12 +746,14 @@ function init() {
     document.body.appendChild(renderer.domElement);
 
     document.body.appendChild(VRButton.createButton(renderer));
-    renderer.xr.enabled = true;
+    //renderer.xr.enabled = true;
 
     createScene();
     createCamera();
     createdirectionalLight();
     createAmbientLight();
+
+    scene.position.set(20, 20, 20);
 
     render();
 
@@ -673,7 +764,7 @@ function init() {
 
 function animate() {
     'use strict';
-    var delta = clock.getDelta();
+    delta = clock.getDelta();
 
     moveAnelGrande(delta);
     moveAnelMedio(delta);
@@ -690,5 +781,5 @@ function animate() {
 }
 
 init();
-animate();
+//animate();
 renderer?.setAnimationLoop(animate);
